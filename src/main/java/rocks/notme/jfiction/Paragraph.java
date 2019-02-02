@@ -11,23 +11,16 @@ public class Paragraph implements Iterable<Paragraph.StoryChunk> {
 
     Paragraph(Element storytext) {
         this(storytext.outerHtml());
-        //check for text alignment style tags
-        if (storytext.attributes().hasKey("style")) {
-            switch (storytext.attributes().get("style")) {
-                case "text-align:left;":
-                    alignment = TextAlignment.LEFT;
-                    break;
-                case "text-align:right;":
-                    alignment = TextAlignment.RIGHT;
-                    break;
-                case "text-align:center;":
-                    alignment = TextAlignment.CENTER;
-                    break;
-            }
-        }
     }
 
     Paragraph(String storytext) {
+        //check for text alignment style tags
+        if (storytext.contains("text-align:center;")) {
+            alignment = TextAlignment.CENTER;
+        } else if (storytext.contains("text-align:right;")) {
+            alignment = TextAlignment.RIGHT;
+        }
+
         //parse elements to convert text into StoryChunks
         int endNodeIndex = 0;
         int startNodeIndex = 0;
