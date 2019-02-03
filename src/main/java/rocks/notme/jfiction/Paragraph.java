@@ -74,12 +74,12 @@ public class Paragraph implements Iterable<Paragraph.StoryChunk> {
         chunks.removeAll(toRemove);
     }
 
-    public Iterator iterator() {
+    public Iterator<rocks.notme.jfiction.Paragraph.StoryChunk> iterator() {
         return chunks.iterator();
     }
 
-    public class StoryChunk {
-        String text = "";
+    class StoryChunk {
+        String text;
         boolean em; //is italic?
         boolean strong; //is bold?
 
