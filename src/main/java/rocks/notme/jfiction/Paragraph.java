@@ -65,11 +65,13 @@ public class Paragraph implements Iterable<Paragraph.StoryChunk> {
             chunks.add(new StoryChunk(storytext.substring(startNodeIndex, endNodeIndex), em, strong));
         }
         //remove empty chunks
-        for (StoryChunk c: chunks) {
+        ArrayList<StoryChunk> toRemove = new ArrayList<>();
+        for (StoryChunk c: chunks) { // ConcurrentModificationException is happening here???
             if (c.text.isEmpty()) {
-                chunks.remove(c);
+                toRemove.add(c);
             }
         }
+        chunks.removeAll(toRemove);
     }
 
     public Iterator iterator() {
