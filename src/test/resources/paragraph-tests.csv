@@ -1,0 +1,4 @@
+paragraph,alignment,text,em,strong,text,em,strong,etc...
+"<p>text</p>",LEFT,"text,false,false"
+"<p style='text-align:center;'>text</p>",CENTER,"text,false,false"
+"<p>text<em>ITALICIZED</em></p>",LEFT,"text,false,false,ITALICIZED,true,false"
