@@ -26,7 +26,7 @@ public class Paragraph implements Iterable<Paragraph.StoryChunk> {
         int startNodeIndex = 0;
         boolean em = false;
         boolean strong = false;
-        for (; endNodeIndex < storytext.length(); endNodeIndex++) {
+        for (; endNodeIndex < storytext.length(); endNodeIndex++) { //TODO test for <br> tags mid-<p> and do newlines
             if (storytext.charAt(endNodeIndex) == '<' && startNodeIndex == 0) { //first chunk, maybe
                 if (storytext.charAt(endNodeIndex + 1) == 'h') {
                     chunks.add(new StoryChunk("<hr>", em, strong));

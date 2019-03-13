@@ -1,6 +1,8 @@
 package rocks.notme.jfiction.jfx;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -9,43 +11,32 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import rocks.notme.jfiction.Jfiction;
-import rocks.notme.jfiction.Story;
+import rocks.notme.jfiction.*;
 
-public class FictionUI extends Application {
+public class FictionController {
 
-    private Stage stage;
     @FXML private TextField fxStoryUrl;
     @FXML private TextField fxAuthorText;
     @FXML private ProgressBar progBar;
     @FXML private Button fxDownloadButton;
-
-    @Override
-    public void start(Stage primaryStage) {
-        Scene scene;
-        try {
-            AnchorPane root = FXMLLoader.load(getClass().getClassLoader().getResource("fxml/FictionUI.fxml"));
-            scene = new Scene(root, 420, 240);
-        }
-        catch (Exception e) {
-            System.err.println("Unable to load FXML! " + e.getMessage());
-            scene = new Scene(new Label("ERROR! FXML failed to load! :(((((((("));
-        }
-
-        //AnchorPane anchorPane = new AnchorPane();
-        //Scene scene = new Scene();
-
-        stage = primaryStage;
-        stage.setTitle("Java Fanfiction Downloader");
-        stage.setScene(scene);
-        stage.show();
-    }
+    @FXML private ChoiceBox<WriterType> fxOutputType;
 
     @FXML public void Download_OnClick() {
         //validate
         if (!Validator.isValid(fxStoryUrl.getText(), fxAuthorText.getText())) {
             new Alert(Alert.AlertType.ERROR, Validator.getMessage()).showAndWait();
         } else { //all good, hopefully
+            Writer writer;
+            switch (fxOutputType.getValue()) {
+                case PDF:
+                    writer = new PdfWriter();
+                    break;
+                case EPUB:
+                    writer = new EpubWriter();
+                    break;
+                default:
+                    writer = new EpubWriter();
+            }
             fxDownloadButton.setDisable(true);
             Service<Void> service = new Service<>() {
                 @Override
@@ -59,7 +50,7 @@ public class FictionUI extends Application {
                                         (obs, oldProgress, newProgress) -> updateProgress(story.getProgress(), 1)
                                 );
                                 story.doLongProcessing();
-                                Jfiction.createPDF(story);
+                                writer.write(story);
                             } catch (Exception e) {
                                 System.err.println(e.getMessage());
                             }
@@ -89,8 +80,8 @@ public class FictionUI extends Application {
                 message = "Story ID must not be empty.";
             } else if (author.isEmpty()) {
                 message = "Author must not be empty.";
-            } else if (!id.matches("^[0-9]{7}$")) {
-                message = "\"" + id + "\" is not a valid Story ID.\nA Story ID must be a seven digit number.";
+            } else if (!id.matches("^[0-9]{7,8}$")) {
+                message = "\"" + id + "\" is not a valid Story ID.\nA Story ID must be a seven (or eight?) digit number.";
             } else {
                 return true;
             }

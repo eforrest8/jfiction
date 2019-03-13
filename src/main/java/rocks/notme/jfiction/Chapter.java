@@ -12,12 +12,16 @@ import java.util.Iterator;
 public class Chapter implements Iterable<Paragraph>, Runnable {
     private ArrayList<Paragraph> paragraphs = new ArrayList<>();
     private Element storyNode;
+    String storyHTML;
     String name;
+    int number;
 
-    public Chapter(String url, String newName) throws IOException {
+    Chapter(String url, String newName, int newNumber) throws IOException {
         name = newName;
+        number = newNumber;
         Document doc = Jsoup.connect(url).get();
         storyNode = doc.getElementById("storytext");
+        storyHTML = storyNode.children().outerHtml();
     }
 
     /**
@@ -30,7 +34,7 @@ public class Chapter implements Iterable<Paragraph>, Runnable {
         storyNode = doc.body(); //not sure this is right, needs to be tested
     }
 
-    public Iterator iterator() {
+    public Iterator<Paragraph> iterator() {
         return paragraphs.iterator();
     }
 
@@ -39,6 +43,7 @@ public class Chapter implements Iterable<Paragraph>, Runnable {
      */
     public void run() {
         Elements storytext = storyNode.children(); // this is all of the <p> elements (or maybe not???)
+
         //check to see if first element in storytext is a <p>, if not use different parse method
         //if (storyNode.html().substring(0, 2).equals("<p")) {
         if (storyNode.childNodeSize() > 0 && (storyNode.child(0).tagName().equals("p") || storyNode.child(1).tagName().equals("p"))) {
