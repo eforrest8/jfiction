@@ -15,7 +15,7 @@ public class StorytextHtmlStringFormatter implements Formatter<String> {
     }
 
     @Override
-    public String call() throws Exception { //TODO: rewrite this to use NodeTree
+    public String call() throws Exception {
         ArrayList<String> paragraphs = new ArrayList<>();
         NodeTree tree = new NodeTree();
 

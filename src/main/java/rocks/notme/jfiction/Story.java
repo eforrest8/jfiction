@@ -20,7 +20,7 @@ public class Story { //TODO: abstract this class
     public final String author;
     public final String location;
     public final int numChapters;
-    public final Image coverArt; //TODO: this can probably be final as well
+    public final Image coverArt;
     private final String getChapterFromURL = "/[0-9]{1,2}/";
 
     private int progress = 0;
